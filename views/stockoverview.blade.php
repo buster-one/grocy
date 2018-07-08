@@ -17,9 +17,23 @@
 		<p class="btn btn-lg btn-danger no-real-button responsive-button">{{ $L('#1 products are already expired', $countAlreadyExpired) }}</p>
 		<p class="btn btn-lg btn-info no-real-button responsive-button">{{ $L('#1 products are below defined min. stock amount', count($missingProducts)) }}</p>
 	</div>
+	<div class="discrete-content-separator-2x"></div>
+	<div class="row">
+		<div class="col-sm-3 no-gutters">
+			<label for="location-filter">{{ $L('Filter by location') }}</label>
+			<select class="form-control" id="location-filter">
+				<option value="all">{{ $L('All') }}</option>
+				@foreach($locations as $location)
+					<option value="{{ $location->name }}">{{ $location->name }}</option>
+				@endforeach
+			</select>
+		</div>
+		<div class="col-sm-3">
+			<label for="search">{{ $L('Search') }}</label>
+			<input type="text" class="form-control" id="search">
+		</div>
+	</div>
 </div>
-
-<div class="discrete-content-separator-2x"></div>
 
 <div class="table-responsive">
 	<table id="stock-overview-table" class="table table-striped">
@@ -29,6 +43,7 @@
 				<th>{{ $L('Product') }}</th>
 				<th>{{ $L('Amount') }}</th>
 				<th>{{ $L('Next best before date') }}</th>
+				<th class="hidden">Hidden location</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -59,6 +74,9 @@
 				<td>
 					{{ $currentStockEntry->best_before_date }}
 					<time class="timeago timeago-contextual" datetime="{{ $currentStockEntry->best_before_date }}"></time>
+				</td>
+				<td class="hidden">
+					{{ FindObjectInArrayByPropertyValue($locations, 'id', FindObjectInArrayByPropertyValue($products, 'id', $currentStockEntry->product_id)->location_id)->name }}
 				</td>
 			</tr>
 			@endforeach

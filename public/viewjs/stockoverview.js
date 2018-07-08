@@ -1,10 +1,33 @@
-﻿$('#stock-overview-table').DataTable({
-	'pageLength': 50,
+﻿var stockOverviewTable = $('#stock-overview-table').DataTable({
+	'paginate': false,
 	'order': [[3, 'asc']],
 	'columnDefs': [
-		{ 'orderable': false, 'targets': 0 }
+		{ 'orderable': false, 'targets': 0 },
+		{ 'visible': false, 'targets': 4 }
 	],
 	'language': JSON.parse(L('datatables_localization'))
+});
+
+$("#location-filter").on("change", function()
+{
+	var value = $(this).val();
+	if (value === "all")
+	{
+		value = "";
+	}
+	
+	stockOverviewTable.column(4).search(value).draw();
+});
+
+$("#search").on("keyup", function()
+{
+	var value = $(this).val();
+	if (value === "all")
+	{
+		value = "";
+	}
+	
+	stockOverviewTable.search(value).draw();
 });
 
 $(document).on('click', '.product-consume-button', function(e)
